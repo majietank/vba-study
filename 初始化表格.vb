@@ -74,7 +74,8 @@ Dim i As Integer
 For i = 1 To Sheets.Count - 1
 With Sheets(i).Activate
     Cells(1, 1).Select
-    ActiveWindow.View = xlPageBreakPreview
+    'ActiveWindow.View = xlPageBreakPreview
+    ActiveWindow.View = xlPageLayoutView
     Columns("B:S").ColumnWidth = 3.35
     Columns("A").ColumnWidth = 8.38
     Rows("1:1").RowHeight = 25
@@ -84,10 +85,16 @@ With Sheets(i).Activate
     ActiveWindow.ScrollRow = 1
     Range("A1:S51").Font.Name = "宋体"
     Range("A1:S51").NumberFormatLocal = "G/通用格式"
-    Range("A1:S51").Cells.Replace What:=" ", Replacement:="", LookAt:=xlPart, SearchOrder:= xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+    Range("A1:S51").Cells.Replace What:=" ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
     Rows("48:51").RowHeight = 15
     Cells(48, "A").Orientation = xlVertical
     Cells(5, "A").Orientation = xlVertical
+    LeftMargin = Application.InchesToPoints(0.708661417322835)
+    RightMargin = Application.InchesToPoints(0.708661417322835)
+    TopMargin = Application.InchesToPoints(0.354330708661417)
+    BottomMargin = Application.InchesToPoints(0.275590551181102)
+    HeaderMargin = Application.InchesToPoints(0.31496062992126)
+    FooterMargin = Application.InchesToPoints(0.31496062992126)
 End With
 Next i
 End Sub
@@ -198,3 +205,5 @@ End With
 Sheet99.Activate
 Call 车牌行
 End Sub
+
+
