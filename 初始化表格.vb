@@ -90,18 +90,18 @@ Dim wjm As String, owjm As String
 owjm = ThisWorkbook.Name
 wjm = "运行记录" & Sheet99.Cells(1, 2) & ".xlsx"
 Workbooks.Add
-ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
+ActiveWorkbook.SaveAs Filename:=Workbooks(owjm).Path & "\" & wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
 Windows(owjm).Activate
 For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
     Sheets(chepai).Select
-    Sheets(chepai).Copy Before:=Workbooks(wjm).Sheets(1)
+    Workbooks(owjm).Sheets(chepai).Copy Before:=Workbooks(wjm).Sheets("Sheet1")
+    Windows(owjm).Activate
 Next i
-With Windows(wjm).Activate
+Windows(wjm).Activate
 Sheets("Sheet1").Delete
 ActiveWorkbook.Save
-ActiveWindow.Close
-End With
+ActiveWorkbook.Close
 End Sub
 '**********************************************************************************************
 Sub 记录录入()
@@ -144,6 +144,8 @@ End With
 Sheet99.Activate
 Call 车牌行
 End Sub
+
+
 
 
 
