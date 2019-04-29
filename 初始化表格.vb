@@ -94,7 +94,8 @@ ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:=xlWorkbookDefault, CreateBackup
 Windows(owjm).Activate
 For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
-    Sheets(chepai).Copy Before:=Workbooks(wjm).Sheet(1)
+    Sheets(chepai).Select
+    Sheets(chepai).Copy Before:=Workbooks(wjm).Sheets(1)
 Next i
 With Windows(wjm).Activate
 Sheets("Sheet1").Delete
