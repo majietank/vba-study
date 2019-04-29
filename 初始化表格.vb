@@ -55,6 +55,10 @@ For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
     Cells(2, i + 1) = chepai
 Next i
+Rows(2).HorizontalAlignment = xlCenter
+Rows(2).VerticalAlignment = xlCenter
+Columns(1).HorizontalAlignment = xlCenter
+Columns(1).VerticalAlignment = xlCenter
 End Sub
 '----------------------------------------------------------------------------------------------
 '调用
