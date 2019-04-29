@@ -83,16 +83,24 @@ ActiveWindow.SelectedSheets.PrintOut Copies:=1, Collate:=True, _
         IgnorePrintAreas:=False
 End Sub
 Sub 记录存档()
-Dim riqi As Date
-Dim wjm As String
-If Day(Date) > 25 Then
-    riqi = Date
-Else
-    riqi = Date - Day(Date)
-End If
-wjm = ActiveWorkbook.Path & "\运行记录" & Month(riqi) & "月.xlsx"
-ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:= _
-        xlWorkbookDefault, CreateBackup:=False
+Dim i As Integer
+Dim chepai As String
+Sheet99.Select
+Dim wjm As String, owjm As String
+owjm = ThisWorkbook.Name
+wjm = "运行记录" & Sheet99.Cells(1, 2) & ".xlsx"
+Workbooks.Add
+ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
+Windows(owjm).Activate
+For i = 1 To Sheets.Count - 1
+    chepai = Sheets(i).Name
+    Sheets(chepai).Copy Before:=Workbooks(wjm).Sheet(1)
+Next i
+With Windows(wjm).Activate
+Sheets("Sheet1").Delete
+ActiveWorkbook.Save
+ActiveWindow.Close
+End With
 End Sub
 '**********************************************************************************************
 Sub 记录录入()
@@ -135,4 +143,6 @@ End With
 Sheet99.Activate
 Call 车牌行
 End Sub
+
+
 
