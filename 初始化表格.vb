@@ -9,6 +9,8 @@ If Day(Date) > 25 Then
 Else
     riqi = Date - Day(Date)
 End If
+Sheet99.Cells(1, 1) = Year(riqi) & "年"
+Sheet99.Cells(1, 2) = Month(riqi) & "月"
 Call 车牌行
 Call 日期列(riqi, 3)
 '循环表
@@ -133,3 +135,4 @@ End With
 Sheet99.Activate
 Call 车牌行
 End Sub
+
