@@ -9,11 +9,10 @@ If Day(Date) > 25 Then
 Else
     riqi = Date - Day(Date)
 End If
+Call 车牌行
 Call 日期列(riqi, 3)
 '循环表
 For i = 1 To Sheets.Count - 1
-    chepai = Sheets(i).Name
-    Cells(2, i + 1) = chepai
     With Sheets(i).Activate
         Call 记录信息(riqi)
         Call 日期列(riqi, 16)
@@ -39,6 +38,14 @@ For i = 1 To 31
     End If
 Next i
 End Sub
+Sub 车牌行()
+Dim i As Integer
+Dim chepai As String
+For i = 1 To Sheets.Count - 1
+    chepai = Sheets(i).Name
+    Cells(2, i + 1) = chepai
+Next i
+End Sub
 Sub 记录信息(riqi As Date)
 Cells(3, "O") = Year(riqi) & "年"
 Cells(3, "Q") = Month(riqi) & "月"
@@ -46,14 +53,16 @@ Cells(47, "E") = Null
 Cells(47, "M") = Null
 Cells(47, "P") = Null
 End Sub
+'**********************************************************************************************
 Sub 表格格式初始化()
 Dim i As Integer
 For i = 1 To Sheets.Count - 1
 With Sheets(i).Activate
+    Cells(1, 1).Select
     ActiveWindow.View = xlPageBreakPreview
     Columns("B:S").ColumnWidth = 3.38
     Columns("A").ColumnWidth = 8.38
-    ActiveWindow.Zoom = 75
+    ActiveWindow.Zoom = 100
     ActiveWindow.ScrollColumn = 1
     ActiveWindow.ScrollRow = 1
     Range("A1:S51").Font.Name = "宋体"
@@ -62,13 +71,28 @@ With Sheets(i).Activate
         xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
     Rows("48:51").RowHeight = 15
     Cells(48, "A").Orientation = xlVertical
+    Cells(5, "A").Orientation = xlVertical
 End With
 Next i
 End Sub
+'**********************************************************************************************
 Sub 打印表格()
 ActiveWindow.SelectedSheets.PrintOut Copies:=1, Collate:=True, _
         IgnorePrintAreas:=False
 End Sub
+Sub 记录存档()
+Dim riqi As Date
+Dim wjm As String
+If Day(Date) > 25 Then
+    riqi = Date
+Else
+    riqi = Date - Day(Date)
+End If
+wjm = ActiveWorkbook.Path & "\运行记录" & Month(riqi) & "月.xlsx"
+ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:= _
+        xlOpenXMLWorkbook, CreateBackup:=False
+End Sub
+'**********************************************************************************************
 Sub 记录录入()
 Dim i As Integer, chewei As Integer
 Dim chepai As String
@@ -97,4 +121,14 @@ If Cells(i, 1) <> 0 Then
     End If
 End If
 Next i
+End Sub
+Sub 新增设备()
+Dim chepai As String
+chepai = InputBox("输入车牌：")
+Sheets(1).Copy Before:=Sheet99
+With ActiveSheet
+    .Name = chepai
+End With
+Sheet99.Activate
+Call 车牌行
 End Sub
