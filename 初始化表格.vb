@@ -62,8 +62,10 @@ For i = 1 To Sheets.Count - 1
 With Sheets(i).Activate
     Cells(1, 1).Select
     ActiveWindow.View = xlPageBreakPreview
-    Columns("B:S").ColumnWidth = 3.38
+    Columns("B:S").ColumnWidth = 3.35
     Columns("A").ColumnWidth = 8.38
+    Rows("1:1").RowHeight = 25
+    Rows("2:51").RowHeight = 15
     ActiveWindow.Zoom = 100
     ActiveWindow.ScrollColumn = 1
     ActiveWindow.ScrollRow = 1
@@ -78,9 +80,34 @@ End With
 Next i
 End Sub
 '**********************************************************************************************
+Sub 打印存档()
+Dim i As Integer
+Dim owjm As String, wjm As String
+wjm = "运行记录" & Sheet99.Cells(1, 2) & "打印存储.xlsx"
+owjm = ThisWorkbook.Name
+Workbooks.Add
+ActiveWorkbook.SaveAs Filename:=Workbooks(owjm).Path & "\" & wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
+Workbooks(owjm).Activate
+For i = 1 To Sheets.Count - 1
+    If Not Sheets(i).Range("S16:S46").Find("*保") Is Nothing Then
+        Sheets(i).Copy before:=Workbooks(wjm).Sheets("Sheet1")
+        Workbooks(owjm).Activate
+    End If
+Next i
+Workbooks(wjm).Activate
+Sheets("Sheet1").Delete
+ActiveWorkbook.Save
+ActiveWorkbook.Close
+End Sub
 Sub 打印表格()
-ActiveWindow.SelectedSheets.PrintOut Copies:=1, Collate:=True, _
-        IgnorePrintAreas:=False
+Dim i As Integer
+For i = 1 To Sheets.Count - 1
+Sheets(i).Activate
+If Not Range("S16:S46").Find("*保") Is Nothing Then
+    ActiveWindow.SelectedSheets.PrintOut Copies:=1, Collate:=True, IgnorePrintAreas:=False
+End If
+Sheet99.Activate
+Next i
 End Sub
 Sub 记录存档()
 Dim i As Integer
@@ -91,14 +118,14 @@ owjm = ThisWorkbook.Name
 wjm = "运行记录" & Sheet99.Cells(1, 2) & ".xlsx"
 Workbooks.Add
 ActiveWorkbook.SaveAs Filename:=Workbooks(owjm).Path & "\" & wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
-Windows(owjm).Activate
+Workbooks(owjm).Activate
 For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
     Sheets(chepai).Select
-    Workbooks(owjm).Sheets(chepai).Copy Before:=Workbooks(wjm).Sheets("Sheet1")
+    Workbooks(owjm).Sheets(chepai).Copy before:=Workbooks(wjm).Sheets("Sheet1")
     Windows(owjm).Activate
 Next i
-Windows(wjm).Activate
+Workbooks(wjm).Activate
 Sheets("Sheet1").Delete
 ActiveWorkbook.Save
 ActiveWorkbook.Close
@@ -137,15 +164,10 @@ End Sub
 Sub 新增设备()
 Dim chepai As String
 chepai = InputBox("输入车牌：")
-Sheets(1).Copy Before:=Sheet99
+Sheets(1).Copy before:=Sheet99
 With ActiveSheet
     .Name = chepai
 End With
 Sheet99.Activate
 Call 车牌行
 End Sub
-
-
-
-
-
