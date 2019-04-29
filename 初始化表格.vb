@@ -90,7 +90,7 @@ Else
 End If
 wjm = ActiveWorkbook.Path & "\运行记录" & Month(riqi) & "月.xlsx"
 ActiveWorkbook.SaveAs Filename:=wjm, FileFormat:= _
-        xlOpenXMLWorkbook, CreateBackup:=False
+        xlWorkbookDefault, CreateBackup:=False
 End Sub
 '**********************************************************************************************
 Sub 记录录入()
@@ -122,6 +122,7 @@ If Cells(i, 1) <> 0 Then
 End If
 Next i
 End Sub
+'**********************************************************************************************
 Sub 新增设备()
 Dim chepai As String
 chepai = InputBox("输入车牌：")
