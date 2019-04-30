@@ -51,12 +51,9 @@ End Sub
 Sub 车牌汇总行()
 Dim i As Integer
 Dim chepai As String
-Dim chejilu As Range
 For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
     Cells(2, i + 1) = chepai
-    Set chejilu = Range(Cells(3, i + 1), Cells(33, i + 1))
-    Cells(34, i + 1) = WorksheetFunction.CountA(chejilu)
 Next i
 Rows(2).HorizontalAlignment = xlCenter
 Rows(2).VerticalAlignment = xlCenter
@@ -71,6 +68,55 @@ Cells(3, "Q") = Month(riqi) & "月"
 Cells(47, "E") = Null
 Cells(47, "M") = Null
 Cells(47, "P") = Null
+End Sub
+'按钮
+Sub 台班统计()
+Dim i As Integer
+Dim chejilu As Range
+For i = 1 To Sheets.Count - 1
+    Set chejilu = Range(Cells(3, i + 1), Cells(33, i + 1))
+    Cells(34, i + 1) = WorksheetFunction.CountA(chejilu)
+Next i
+End Sub
+'按钮
+Sub 每日油耗()
+Dim i As Integer
+For i = 36 To 72
+If Cells(i, 3) <> 0 Then
+    Cells(i, 5) = Cells(i, 3) / Cells(i, 4)
+End If
+Next i
+End Sub
+'**********************************************************************************************
+'       制作油耗表模块
+'**********************************************************************************************
+Sub 油耗列()
+Dim i As Integer, chewei As Integer
+Dim youhao As Range
+Dim chepai As String
+Sheet99.Activate
+For i = 36 To 72
+'车牌列
+Set youhao = Range(Cells(i, 1), Cells(i, 2))
+youhao.Select
+With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = True
+End With
+'每月台班数
+chepai = Right(Cells(i, 1), 5)
+If Not Sheet99.Rows(2).Find(chepai) Is Nothing Then
+    chewei = Sheet99.Rows(2).Find(chepai).Column
+    Cells(i, 4) = Cells(34, chewei)
+End If
+Next i
 End Sub
 '**********************************************************************************************
 '       单元格格式模块
