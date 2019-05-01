@@ -1,34 +1,40 @@
 '**********************************************************************************************
-'       制作总表模块
+'       总表模块
 '**********************************************************************************************
-'按钮
-Sub 表格数据初始化()
+'////////////记录子模块\\\\\\\\\\\\\\
+'总表按钮
+Sub 总表生成()
 Dim i As Integer
 Dim chepai As String
 Dim riqi As Date
+Dim jilu As Range
 Sheet99.Activate
+    '设置总表第一行
+Rows("1:1").RowHeight = 25
+    '设置所有单元格居中
+With Cells
+    .HorizontalAlignment = xlCenter
+    .VerticalAlignment = xlCenter
+End With
     '判断日期
 If Day(Date) > 25 Then
     riqi = Date
 Else
     riqi = Date - Day(Date)
 End If
+    '填写总表日期
 Sheet99.Cells(1, 1) = Year(riqi) & "年"
 Sheet99.Cells(1, 2) = Month(riqi) & "月"
-Call 车牌汇总行
+    '车牌行制作
+Call 车牌行
+    '日期列制作
 Call 日期列(riqi, 3)
-    '循环表
-For i = 1 To Sheets.Count - 1
-    With Sheets(i).Activate
-        Call 记录信息(riqi)
-        Call 日期列(riqi, 16)
-        Range("B16:S46") = Null
-    End With
-    Sheet99.Activate
-Next i
+Set jilu = Range(Cells(3, 2), Cells(33, Sheets.Count - 1))
+jilu.ClearContents
+Rows("35:35").RowHeight = 25
 End Sub
 '----------------------------------------------------------------------------------------------
-'调用
+'全局调用
 Sub 日期列(riqi As Date, qishi As Integer)
 Dim i As Integer
 Dim riqirow As Date
@@ -47,37 +53,16 @@ For i = 1 To 31
 Next i
 End Sub
 '----------------------------------------------------------------------------------------------
-'调用
-Sub 车牌汇总行()
+'总表调用
+Sub 车牌行()
 Dim i As Integer
 Dim chepai As String
 For i = 1 To Sheets.Count - 1
     chepai = Sheets(i).Name
     Cells(2, i + 1) = chepai
 Next i
-Rows(2).HorizontalAlignment = xlCenter
-Rows(2).VerticalAlignment = xlCenter
-Columns(1).HorizontalAlignment = xlCenter
-Columns(1).VerticalAlignment = xlCenter
 End Sub
-'----------------------------------------------------------------------------------------------
-'调用
-Sub 记录信息(riqi As Date)
-Cells(3, "O") = Year(riqi) & "年"
-Cells(3, "Q") = Month(riqi) & "月"
-Cells(47, "E") = Null
-Cells(47, "M") = Null
-Cells(47, "P") = Null
-End Sub
-'按钮
-Sub 台班统计()
-Dim i As Integer
-Dim chejilu As Range
-For i = 1 To Sheets.Count - 1
-    Set chejilu = Range(Cells(3, i + 1), Cells(33, i + 1))
-    Cells(34, i + 1) = WorksheetFunction.CountA(chejilu)
-Next i
-End Sub
+'////////////油耗子模块\\\\\\\\\\\\\\
 '按钮
 Sub 每日油耗()
 Dim i As Integer
@@ -87,9 +72,6 @@ If Cells(i, 3) <> 0 Then
 End If
 Next i
 End Sub
-'**********************************************************************************************
-'       制作油耗表模块
-'**********************************************************************************************
 Sub 油耗列()
 Dim i As Integer, chewei As Integer
 Dim youhao As Range
@@ -118,6 +100,44 @@ If Not Sheet99.Rows(2).Find(chepai) Is Nothing Then
 End If
 Next i
 End Sub
+
+'**********************************************************************************************
+'       记录表模块
+'**********************************************************************************************
+'----------------------------------------------------------------------------------------------
+Sub 循环选择记录表()
+Dim i As Integer
+For i = 1 To Sheets.Count - 1
+    With Sheets(i).Activate
+        Call 记录表信息(riqi)
+        Call 日期列(riqi, 16)
+        Range("B16:S46") = Null
+    End With
+    Sheet99.Activate
+Next i
+End Sub
+'调用
+Sub 记录表信息(riqi As Date)
+Cells(3, "O") = Year(riqi) & "年"
+Cells(3, "Q") = Month(riqi) & "月"
+Cells(47, "E") = Null
+Cells(47, "M") = Null
+Cells(47, "P") = Null
+End Sub
+
+'按钮
+Sub 台班统计()
+Dim i As Integer
+Dim chejilu As Range
+For i = 1 To Sheets.Count - 1
+    Set chejilu = Range(Cells(3, i + 1), Cells(33, i + 1))
+    Cells(34, i + 1) = WorksheetFunction.CountA(chejilu)
+Next i
+End Sub
+'**********************************************************************************************
+'       计算每日油耗
+'**********************************************************************************************
+
 '**********************************************************************************************
 '       单元格格式模块
 '**********************************************************************************************
