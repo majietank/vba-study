@@ -64,9 +64,12 @@ Next i
 End Sub
 '////////////油耗子模块\\\\\\\\\\\\\\
 '按钮
-Sub 每日油耗()
-Dim i As Integer
-For i = 36 To 72
+Sub 油耗表生成()
+Dim i As Integer, j As Integer
+Windows("当月油耗统计表.xlsx").Activate
+Columns(1).ColumnWidth = 20
+j = Range(Cells(36, 1), Cells(65536, 1)).End(xlDown).Row
+For i = 36 To j
 If Cells(i, 3) <> 0 Then
     Cells(i, 5) = Cells(i, 3) / Cells(i, 4)
 End If
