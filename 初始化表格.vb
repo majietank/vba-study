@@ -3,10 +3,11 @@
 '**********************************************************************************************
 '////////////记录子模块\\\\\\\\\\\\\\
 '总表按钮
+Option Explicit
+Public riqi As Date
 Sub 总表生成()
 Dim i As Integer
 Dim chepai As String
-Dim riqi As Date
 Dim jilu As Range
 Sheet99.Activate
     '设置总表第一行
@@ -95,14 +96,6 @@ With Selection
         .ReadingOrder = xlContext
         .MergeCells = True
 End With
-'每月台班数
-chepai = Right(Cells(i, 1), 5)
-If Not Sheet99.Rows(2).Find(chepai) Is Nothing Then
-    chewei = Sheet99.Rows(2).Find(chepai).Column
-    Cells(i, 4) = Cells(34, chewei)
-End If
-Next i
-End Sub
 
 '**********************************************************************************************
 '       记录表模块
@@ -149,65 +142,24 @@ Sub 表格格式初始化()
 Dim i As Integer
 For i = 1 To Sheets.Count - 1
 With Sheets(i).Activate
-    Cells(1, 1).Select
-    ActiveWindow.View = xlPageBreakPreview
-    'ActiveWindow.View = xlPageLayoutView
+'    ActiveWindow.View = xlPageBreakPreview
+    ActiveWindow.View = xlPageLayoutView
     ActiveWindow.Zoom = 100
-    Columns("B:S").ColumnWidth = 3.35
-    Columns("A").ColumnWidth = 8.38
+    Columns("A:A").ColumnWidth = 8.38
+    Columns("B:S").ColumnWidth = 3.38
     Rows("1:1").RowHeight = 25
-    Rows("2:51").RowHeight = 15
-    Range("A1:S51").Font.Name = "宋体"
-    Range("A1:S51").NumberFormatLocal = "G/通用格式"
-    Range("A1:S51").Cells.Replace What:=" ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
-    Rows("48:51").RowHeight = 15
-    Cells(48, "A").Orientation = xlVertical
-    Cells(5, "A").Orientation = xlVertical
-    '页面修改
-        LeftHeader = ""
-        CenterHeader = ""
-        RightHeader = ""
-        LeftFooter = ""
-        CenterFooter = ""
-        RightFooter = ""
-        LeftMargin = Application.InchesToPoints(0.708661417322835)
-        RightMargin = Application.InchesToPoints(0.708661417322835)
-        TopMargin = Application.InchesToPoints(0.354330708661417)
-        BottomMargin = Application.InchesToPoints(0.275590551181102)
-        HeaderMargin = Application.InchesToPoints(0.31496062992126)
-        FooterMargin = Application.InchesToPoints(0.31496062992126)
-        PrintHeadings = False
-        PrintGridlines = False
-        PrintComments = xlPrintNoComments
-        PrintQuality = 600
-        CenterHorizontally = False
-        CenterVertically = False
-        Orientation = xlPortrait
-        Draft = False
-        PaperSize = xlPaperA4
-        FirstPageNumber = xlAutomatic
-        Order = xlDownThenOver
-        BlackAndWhite = False
-        Zoom = 100
-        PrintErrors = xlPrintErrorsDisplayed
-        OddAndEvenPagesHeaderFooter = False
-        DifferentFirstPageHeaderFooter = False
-        ScaleWithDocHeaderFooter = True
-        AlignMarginsHeaderFooter = True
-'        EvenPage.LeftHeader.Text = ""
-'        EvenPage.CenterHeader.Text = ""
-'        EvenPage.RightHeader.Text = ""
-'        EvenPage.LeftFooter.Text = ""
-'        EvenPage.CenterFooter.Text = ""
-'        EvenPage.RightFooter.Text = ""
-'        FirstPage.LeftHeader.Text = ""
-'        FirstPage.CenterHeader.Text = ""
-'        FirstPage.RightHeader.Text = ""
-'        FirstPage.LeftFooter.Text = ""
-'        FirstPage.CenterFooter.Text = ""
-'        FirstPage.RightFooter.Text = ""
+    Rows("2:51").RowHeight = 14.5
+'    ActiveSheet.PageSetup.LeftMargin = Application.InchesToPoints(0.7)
+'    ActiveSheet.PageSetup.RightMargin = Application.InchesToPoints(0.7)
+'    ActiveSheet.PageSetup.TopMargin = Application.InchesToPoints(0.5)
+'    ActiveSheet.PageSetup.BottomMargin = Application.InchesToPoints(0.5)
+    Range("A1:S51").Font.Name = "新宋体"
+    Range("A1:S1").Font.Size = 20
+    Range("A2:S47").Font.Size = 11
+    Range("A48").Font.Size = 11
+    Range("C48:S51").Font.Size = 9
+    Cells(1, 1).Select
 End With
-MsgBox 1
 Next i
 End Sub
 '**********************************************************************************************
