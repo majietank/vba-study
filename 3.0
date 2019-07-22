@@ -1,0 +1,148 @@
+Option Explicit
+Public riqi As Date
+Private Sub Workbook_Open()
+If Day(Now) <= 25 Then
+    riqi = Now - Day(Now)
+Else
+    riqi = Now
+End If
+End Sub
+Sub 表格初始化1()
+Dim i As Integer
+'循环选择子表，清除上个月数据，填写子表日期
+For i = 1 To Sheets.Count - 1
+    With Sheets(i).Select
+        Range("A16:S46").ClearContents
+        Range("O3") = Year(riqi) & "年"
+        Range("Q3") = Month(riqi) & "月"
+        Call 日期列(16)
+    End With
+Next i
+'清除总表数据
+Sheet99.Activate
+Range("A3:AG33").ClearContents
+Range("A36:C200").ClearContents
+Call 日期列(3)
+Range("A1") = Year(Time) & "年"
+Range("B1") = Month(Time) & "月"
+End Sub
+'制作当月日期列
+Sub 日期列(qishi As Integer)
+Dim i As Integer
+Dim riqirow As Date
+For i = 1 To 31
+    If i <= 25 Then
+        riqirow = DateSerial(Year(riqi), Month(riqi), i)
+        Cells(i + qishi + 5, 1) = Day(riqirow)
+    Else
+        riqirow = DateSerial(Year(riqi), Month(riqi) - 1, i)
+        If Month(riqi) = Month(riqirow) Then
+            Cells(i - 26 + qishi, 1) = Null
+        Else
+            Cells(i - 26 + qishi, 1) = Day(riqirow)
+        End If
+    End If
+Next i
+End Sub
+Sub 新增设备2()
+Dim i As Integer
+Dim chepai As String
+chepai = InputBox("输入新设备车牌：")
+Sheets(Sheets.Count - 1).Copy before:=Sheet99
+Sheets(Sheets.Count - 1).Name = chepai
+Range("A3") = "机械名称:"
+Range("G3") = "编号:"
+Sheet99.Select
+i = Range("B2").End(xlToRight).Column
+Cells(2, i) = chepai
+Range(Cells(34, i), Cells(34, i + 1)).FillRight
+End Sub
+Sub 计算油耗4()
+Dim chepai As String
+Dim loccol As Integer, i As Integer, lastrow As Integer
+lastrow = Range("A36").End(xlDown).Row
+For i = 36 To lastrow
+    chepai = Right(Cells(i, 1), 5)
+    If Not Rows(2).Find(chepai) Is Nothing Then
+        loccol = Rows(2).Find(chepai).Column
+        Cells(i, 3) = Cells(34, loccol).Value
+        Cells(35, loccol) = Cells(i, 4).Value
+    End If
+    Range(Cells(4, 36), Cells(4, lastrow)).FillDown
+Next i
+End Sub
+Sub 复制记录到子表6()
+Dim i As Integer, youhao As Integer
+Dim chepai As String
+For i = 2 To Range("B2").End(xlToRight).Column
+    Range(Cells(3, i), Cells(33, i)).Copy
+    chepai = Cells(2, i)
+    youhao = Cells(35, i).Value
+    With Sheets(chepai).Select
+        Range("P16").PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+        Call 判断记录
+        Call 油耗修改(youhao)
+    End With
+    Sheet99.Select
+Next i
+End Sub
+Sub 判断记录()
+Dim i  As Integer
+For i = 16 To 46
+If Cells(i, 1) <> 0 Then
+    If Cells(i, "P") <> 0 Then
+        Range(Cells(i, "B"), Cells(i, "O")) = "√"
+        Cells(i, "S") = Null
+    Else
+        Cells(i, "S") = "○"
+    End If
+End If
+Next i
+End Sub
+Sub 油耗修改(youhao As Integer)
+If youhao <> 0 Then
+Range("Q16").PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+Range("Q16:Q46").Select
+Selection.Replace What:="8", Replacement:=youhao, LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False
+Application.CutCopyMode = False
+End If
+End Sub
+Sub 清除错误()
+Dim i As Integer
+For i = 1 To Sheets.Count - 1
+With Sheets(i).Select
+Range("B16:S46").ClearContents
+End With
+Next i
+End Sub
+Sub 存档8()
+Dim i As Integer
+Dim wjm As String
+wjm = "运行记录" & Month(riqi) & "月.xlsx"
+Application.DisplayAlerts = False
+ActiveWorkbook.SaveAs Filename:=ActiveWorkbook.Path & "\" & wjm, FileFormat:=xlWorkbookDefault, CreateBackup:=False
+ActiveWorkbook.Sheets("总表").Delete
+ActiveWorkbook.Save
+ActiveWorkbook.Close
+End Sub
+Sub 打印7()
+Dim i As Integer
+For i = 1 To Sheets.Count - 1
+Sheets(i).Activate
+If Not Range("S16:S46").Find("*保") Is Nothing Then
+    ActiveWindow.SelectedSheets.PrintOut Copies:=1, Collate:=True, IgnorePrintAreas:=False
+End If
+Sheet99.Activate
+Next i
+End Sub
+Sub ceshi()
+Dim i As Integer
+For i = 1 To Sheets.Count - 1
+Sheets(i).Select
+Range("Q3") = Month(riqi) & "月"
+Range("A16:S46").ClearContents
+Call 日期列(16)
+Next i
+End Sub
+
+
