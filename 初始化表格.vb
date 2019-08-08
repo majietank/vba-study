@@ -269,3 +269,107 @@ End With
 Sheet99.Activate
 Call 车牌行
 End Sub
+
+'**********************************************************************************************
+Sub test()
+Dim i%, b%
+Dim riqirange0 As Range
+Dim riqirange1 As Range
+Dim riqirange2 As Range
+Dim riqirange3 As Range
+'清理子表所有内容
+Cells.Delete
+Set riqirange0 = Range(Cells(3, 1), Cells(33, 1))
+Call 日期列(3)
+'循环子表
+For i = 1 To Sheets.Count - 2
+Cells(2, i * 3) = Sheets(i).Name
+Range(Cells(2, i * 3), Cells(2, i * 3 + 2)).Select
+With Selection
+    .Merge
+    .HorizontalAlignment = xlCenter
+    .VerticalAlignment = xlCenter
+    .Interior.ThemeColor = xlThemeColorAccent3
+    .Interior.TintAndShade = 0.2
+End With
+Range(Cells(34, i * 3), Cells(34, i * 3 + 2)).Select
+With Selection
+    .Merge
+    .HorizontalAlignment = xlCenter
+    .VerticalAlignment = xlCenter
+    .Interior.ThemeColor = xlThemeColorAccent3
+    .Interior.TintAndShade = 0.2
+End With
+Columns(i * 3).ColumnWidth = 3
+Columns(i * 3 + 1).ColumnWidth = 3
+Columns(i * 3 + 2).ColumnWidth = 3
+Set riqirange1 = Range(Cells(3, i * 3), Cells(33, i * 3))
+Set riqirange2 = Range(Cells(3, i * 3 + 1), Cells(33, i * 3 + 1))
+Set riqirange3 = Range(Cells(3, i * 3 + 2), Cells(33, i * 3 + 2))
+riqirange0.Copy riqirange1
+riqirange2.Select
+With Selection
+    .Interior.ThemeColor = xlThemeColorAccent3
+    .Interior.TintAndShade = 0.8
+End With
+riqirange3.Select
+With Selection
+    .Interior.Color = 13434879
+    .Interior.TintAndShade = 0.8
+End With
+b = b + 3
+Next i
+Range(Cells(1, 1), Cells(33, b)).Select
+With Selection
+    .Borders(xlEdgeTop).LineStyle = xlContinuous
+        .Borders(xlEdgeTop).ColorIndex = 0
+        .Borders(xlEdgeTop).TintAndShade = 0
+        .Borders(xlEdgeTop).Weight = xlThin
+    .Borders(xlEdgeBottom).LineStyle = xlContinuous
+        .Borders(xlEdgeBottom).ColorIndex = 0
+        .Borders(xlEdgeBottom).TintAndShade = 0
+        .Borders(xlEdgeBottom).Weight = xlThin
+    .Borders(xlEdgeRight).LineStyle = xlContinuous
+        .Borders(xlEdgeRight).ColorIndex = 0
+        .Borders(xlEdgeRight).TintAndShade = 0
+        .Borders(xlEdgeRight).Weight = xlThin
+    .Borders(xlEdgeLeft).LineStyle = xlContinuous
+        .Borders(xlEdgeLeft).ColorIndex = 0
+        .Borders(xlEdgeLeft).TintAndShade = 0
+        .Borders(xlEdgeLeft).Weight = xlThin
+    .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+        .Borders(xlInsideHorizontal).ColorIndex = 0
+        .Borders(xlInsideHorizontal).TintAndShade = 0
+        .Borders(xlInsideHorizontal).Weight = xlThin
+    .Borders(xlInsideVertical).LineStyle = xlContinuous
+        .Borders(xlInsideVertical).ColorIndex = 0
+        .Borders(xlInsideVertical).TintAndShade = 0
+        .Borders(xlInsideVertical).Weight = xlThin
+End With
+Range(Cells(1, 1), Cells(1, b)).Select
+With Selection
+    .Merge
+    .Font.Size = 24
+    .Font.Name = "微软雅黑"
+    .Value = Year(Now) & "年" & Month(Now) & "月台班记录统计"
+End With
+Cells(34, 3).FormulaR1C1 = "=COUNTA(R[-31]C[1]:D3D33)"
+Cells(1, 1).Select
+End Sub
+Sub 日期列(qishi As Integer)
+Dim i As Integer
+Dim riqirow As Date
+For i = 1 To 31
+    If i <= 25 Then
+        riqirow = DateSerial(Year(riqi), Month(riqi), i)
+        Cells(i + qishi + 5, 1) = Day(riqirow)
+    Else
+        riqirow = DateSerial(Year(riqi), Month(riqi) - 1, i)
+        If Month(riqi) = Month(riqirow) Then
+            Cells(i - 26 + qishi, 1) = Null
+        Else
+            Cells(i - 26 + qishi, 1) = Day(riqirow)
+        End If
+    End If
+Next i
+End Sub
