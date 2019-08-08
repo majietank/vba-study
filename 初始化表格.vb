@@ -319,7 +319,7 @@ With Selection
 End With
 b = b + 3
 Next i
-Range(Cells(1, 1), Cells(33, b)).Select
+Range(Cells(1, 1), Cells(33, i * 3 - 1)).Select
 With Selection
     .Borders(xlEdgeTop).LineStyle = xlContinuous
         .Borders(xlEdgeTop).ColorIndex = 0
@@ -346,15 +346,27 @@ With Selection
         .Borders(xlInsideVertical).TintAndShade = 0
         .Borders(xlInsideVertical).Weight = xlThin
 End With
-Range(Cells(1, 1), Cells(1, b)).Select
+Range(Cells(1, 1), Cells(1, i * 3 - 1)).Select
 With Selection
     .Merge
     .Font.Size = 24
     .Font.Name = "微软雅黑"
     .Value = Year(Now) & "年" & Month(Now) & "月台班记录统计"
 End With
-Cells(34, 3).FormulaR1C1 = "=COUNTA(R[-31]C[1]:D3D33)"
-Cells(1, 1).Select
+Cells(34, 3).Select
+ActiveCell.FormulaR1C1 = "=COUNT(R3C[1]:R33C[1])"
+Range("C34:E34").Select
+Selection.AutoFill Destination:=Range("C34:DF34"), Type:=xlFillDefault
+Range(Cells(37, 1), Cells(37, 5)).Select
+With Selection
+    .Merge
+    .Font.Size = 12
+    .Font.Name = "微软雅黑"
+    .FormulaR1C1 = Year(Now) & "年" & Month(Now) & "月油耗统计"
+End With
+Cells(38, 4).Select
+ActiveCell.FormulaR1C1 = "=IFERROR(INT(RC[-2]/RC[-1]),0)"
+Range(Cells(38, 4), Cells(i + 37, 4)).FillDown
 End Sub
 Sub 日期列(qishi As Integer)
 Dim i As Integer
